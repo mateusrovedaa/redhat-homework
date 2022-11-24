@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SSH_COMMAND="ssh localhost"
+SSH_COMMAND="ssh -i /root/.ssh/id_rsa_test localhost"
 
 configure_prerequisites() {
     PACKAGES_REQUISITES=("openssh-server" "crypto-policies" "curl")
@@ -15,6 +15,12 @@ configure_prerequisites() {
             INSTALLED_PACKAGES+=("${pkg}")
         fi
     done
+
+    mkdir -p /root/.ssh/
+    ssh-keygen -f /root/.ssh/id_rsa_test -N ''
+    [[ -f /root/.ssh/authorized_keys ]] && cp /root/.ssh/authorized_keys /root/.ssh/authorized_keys.bkp 
+    cat /root/.ssh/id_rsa_test.pub >> /root/.ssh/authorized_keys
+
 }
 
 setup() {
@@ -30,6 +36,8 @@ cleanup() {
     done
 
     change_policy ${START_POLICY}
+    rm /root/.ssh/{id_rsa_test,id_rsa_test.pub}
+    [[ -f /root/.ssh/authorized_keys.bkp ]] && mv /root/.ssh/authorized_keys.bkp /root/.ssh/authorized_keys || rm /root/.ssh/authorized_keys
 }
 
 change_policy() {
