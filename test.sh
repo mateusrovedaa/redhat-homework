@@ -134,12 +134,12 @@ test_legacy_algorithm() {
         set -x
         change_policy "DEFAULT"
         RESULT_DEFAULT=$(
-            ${SSH_COMMAND} -oCiphers=3des-cbc "echo 'CONNECTED'"
+            ${SSH_COMMAND} -o Ciphers=3des-cbc "echo 'CONNECTED'"
             echo $?
         )
         change_policy "LEGACY"
         RESULT_LEGACY=$(
-            ${SSH_COMMAND} -oCiphers=3des-cbc "echo 'CONNECTED'"
+            ${SSH_COMMAND} -o Ciphers=3des-cbc "echo 'CONNECTED'"
         )
         set +x
 
@@ -221,7 +221,7 @@ print_results() {
     echo ""
     echo -e "${RED}FAILED TESTS: ${RESET}${#FAILED_TESTS[@]}"
     for failed_test in ${FAILED_TESTS[@]}; do
-        echo "(${failed_test}"
+        echo ${failed_test}
     done
 }
 
